@@ -420,7 +420,7 @@ function App() {
                   <h3 className="font-bold text-lg">
                     {language === 'en'
                       ? 'Bogura Online Blood Donation Organisation'
-                      : 'বগুড়া অনলাইন রক্তদান সংস্থা'}
+                      : 'বগুড়া অনলাইন রক্তদান সংগঠন'}
                   </h3>
                   <p className="text-gray-600">
                     {language === 'en'
@@ -429,16 +429,22 @@ function App() {
                   </p>
                   <ul className="mt-2 space-y-2 text-gray-700">
                     <li className="flex items-start gap-2">
-                      <Users size={18} className="mt-1 flex-shrink-0" />
-                      {language === 'en' 
-                        ? 'Blood Donor Management' 
-                        : 'রক্তদাতা ব্যবস্থাপনা'}
+                      <Target size={18} className="mt-1 flex-shrink-0" />
+                      {language === 'en'
+                        ? 'First AID'
+                        : 'প্রাথমিক চিকিৎসা'}
                     </li>
                     <li className="flex items-start gap-2">
                       <Target size={18} className="mt-1 flex-shrink-0" />
                       {language === 'en'
-                        ? 'Emergency Response'
-                        : 'জরুরি প্রতিক্রিয়া'}
+                        ? 'CPR'
+                        : 'সিপিআর'}
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Users size={18} className="mt-1 flex-shrink-0" />
+                      {language === 'en' 
+                        ? 'Blood Donor Management' 
+                        : 'রক্তদাতা ব্যবস্থাপনা'}
                     </li>
                   </ul>
                 </motion.div>
