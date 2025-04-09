@@ -371,46 +371,6 @@ function App() {
 
           {/* Experience Section */}
           <Element name="experience">
-            <motion.section
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="bg-white p-6 rounded-lg shadow-md"
-            >
-              <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-green-700">
-                <Briefcase />
-                {content[language].experience}
-              </h2>
-              <div className="space-y-6">
-                <motion.div
-                  initial={{ x: -20, opacity: 0 }}
-                  whileInView={{ x: 0, opacity: 1 }}
-                  viewport={{ once: true }}
-                  className="border-l-4 border-red-600 pl-4"
-                >
-                  <h3 className="font-bold text-lg">
-                    {language === 'en'
-                      ? 'Bangladesh Red Crescent Society'
-                      : 'বাংলাদেশ রেড ক্রিসেন্ট সোসাইটি'}
-                  </h3>
-                  <p className="text-gray-600">
-                    {language === 'en'
-                      ? 'Role: Volunteer | 2022-Present'
-                      : 'ভূমিকা: স্বেচ্ছাসেবী | ২০২২-বর্তমান'}
-                  </p>
-                  <ul className="mt-2 space-y-2 text-gray-700">
-                    <li className="flex items-start gap-2">
-                      <Users size={18} className="mt-1 flex-shrink-0" />
-                      {language === 'en' ? 'Teamwork' : 'টিমওয়ার্ক'}
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Target size={18} className="mt-1 flex-shrink-0" />
-                      {language === 'en'
-                        ? 'Blood Management'
-                        : 'রক্ত ব্যবস্থাপনা'}
-                    </li>
-                  </ul>
-                </motion.div>
                 <motion.div
                   initial={{ x: -20, opacity: 0 }}
                   whileInView={{ x: 0, opacity: 1 }}
