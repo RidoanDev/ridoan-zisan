@@ -43,8 +43,8 @@ function App() {
 
   const documents = {
     cv: {
-      en: 'https://drive.google.com/file/d/1WOtpYUWEyuQ9TZxbY-KEDBsv1Tl086sp/view?usp=drivesdk',
-      bn: 'https://drive.google.com/file/d/1WOtpYUWEyuQ9TZxbY-KEDBsv1Tl086sp/view?usp=drivesdk',
+      en: 'https://drive.google.com/file/d/1WViawjcKAsO9sDyo4DIeN1ckSNFcRMeD/view?usp=drivesdk',
+      bn: 'https://drive.google.com/file/d/1WViawjcKAsO9sDyo4DIeN1ckSNFcRMeD/view?usp=drivesdk',
     },
     certificates: [
       {
@@ -92,7 +92,7 @@ function App() {
       role: 'Student | Volunteer | Web Application Developer',
       statement:
         'As a dedicated student and volunteer, I aim to use my academic knowledge and interpersonal skills to contribute to educational and social initiatives. I seek opportunities for growth, collaboration, and positive impact while upholding integrity, empathy, and excellence.',
-      downloadCV: 'Download CV',
+      downloadCV: 'Download Resume',
       education: 'Education',
       experience: 'Experience',
       skills: 'Skills',
@@ -122,7 +122,7 @@ function App() {
       role: 'শিক্ষার্থী | স্বেচ্ছাসেবী | ওয়েব এপ্লিকেশন ডেভলপার',
       statement:
         'একজন নিবেদিতপ্রাণ ছাত্র এবং স্বেচ্ছাসেবক হিসেবে, আমি আমার একাডেমিক জ্ঞান এবং আন্তঃব্যক্তিক দক্ষতা ব্যবহার করে শিক্ষাগত এবং সামাজিক উদ্যোগে অবদান রাখার লক্ষ্য রাখি। আমি সততা, সহানুভূতি এবং শ্রেষ্ঠত্ব বজায় রেখে বৃদ্ধি, সহযোগিতা এবং ইতিবাচক প্রভাবের সুযোগ খুঁজি।',
-      downloadCV: 'সিভি ডাউনলোড করুন',
+      downloadCV: 'জীবনবৃত্তান্ত ডাউনলোড করুন',
       education: 'শিক্ষা',
       experience: 'অভিজ্ঞতা',
       skills: 'দক্ষতা',
