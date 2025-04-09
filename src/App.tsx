@@ -43,8 +43,8 @@ function App() {
 
   const documents = {
     cv: {
-      en: 'https://drive.google.com/file/d/1UunIL4qd83iBLPGsJZEHcjf_mZSCxtos/view?usp=drivesdk',
-      bn: 'https://drive.google.com/file/d/1UunIL4qd83iBLPGsJZEHcjf_mZSCxtos/view?usp=drivesdk',
+      en: 'https://drive.google.com/file/d/1WOtpYUWEyuQ9TZxbY-KEDBsv1Tl086sp/view?usp=drivesdk',
+      bn: 'https://drive.google.com/file/d/1WOtpYUWEyuQ9TZxbY-KEDBsv1Tl086sp/view?usp=drivesdk',
     },
     certificates: [
       {
