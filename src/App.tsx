@@ -338,7 +338,7 @@ function App() {
                 animate={{ scale: 1 }}
                 transition={{ type: 'spring', stiffness: 260, damping: 20 }}
                 src="https://github.com/RidoanDev.png"
-                alt="Professional headshot"
+                alt="Md Ridoan Mahmud Zisan"
                 className="w-48 h-48 rounded-full border-4 border-white shadow-lg"
               />
               <div>
