@@ -186,11 +186,11 @@ export const LiveChat = () => {
 
       {/* Chat Window */}
       {isChatOpen && (
-        <div className="fixed bottom-5 right-6 w-96 max-w-[calc(100vw-4rem)] bg-white rounded-lg shadow-xl z-50 flex flex-col max-h-[450px]">
+        <div className="fixed bottom-5 right-6 w-96 max-w-[calc(100vw-4rem)] bg-white rounded-lg shadow-xl z-50 flex flex-col max-h-[440px]">
           {/* Chat Header */}
-          <div className="bg-blue-500 text-white p-4 rounded-t-lg flex justify-between items-center">
+          <div className="bg-blue-500 text-white p-2 rounded-t-lg flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <Ghost className="w-6 h-6" />
+              <Ghost className="w-5 h-5" />
               <h2 className="font-semibold">Ghost</h2>
             </div>
             <button
@@ -270,12 +270,12 @@ export const LiveChat = () => {
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="message"
                 disabled={isLoading}
-                className="flex-1 rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 rounded-lg border border-gray-300 px--20 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <button
                 type="submit"
                 disabled={!input.trim() || isLoading}
-                className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="bg-blue-500 text-white rounded-lg px-3 py-1 hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 <Send className="w-4 h-4" />
                 <span className="sr-only">Send</span>
