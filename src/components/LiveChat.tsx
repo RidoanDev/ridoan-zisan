@@ -186,7 +186,7 @@ export const LiveChat = () => {
 
       {/* Chat Window */}
       {isChatOpen && (
-        <div className="fixed bottom-5 right-5 w-96 max-w-[calc(100vw-4rem)] bg-white rounded-lg shadow-xl z-50 flex flex-col max-h-[450px]">
+        <div className="fixed bottom-5 right-6 w-96 max-w-[calc(100vw-4rem)] bg-white rounded-lg shadow-xl z-50 flex flex-col max-h-[450px]">
           {/* Chat Header */}
           <div className="bg-blue-500 text-white p-4 rounded-t-lg flex justify-between items-center">
             <div className="flex items-center gap-2">
