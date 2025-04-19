@@ -32,7 +32,10 @@ export const LiveChat = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setIsMenuOpen(false);
       }
     };
@@ -49,7 +52,8 @@ export const LiveChat = () => {
     setIsLoading(true);
 
     try {
-      const apiUrl = 'https://backend.buildpicoapps.com/aero/run/llm-api?pk=v1-Z0FBQUFBQm5HUEtMSjJkakVjcF9IQ0M0VFhRQ0FmSnNDSHNYTlJSblE0UXo1Q3RBcjFPcl9YYy1OZUhteDZWekxHdWRLM1M1alNZTkJMWEhNOWd4S1NPSDBTWC12M0U2UGc9PQ==';
+      const apiUrl =
+        'https://backend.buildpicoapps.com/aero/run/llm-api?pk=v1-Z0FBQUFBQm5HUEtMSjJkakVjcF9IQ0M0VFhRQ0FmSnNDSHNYTlJSblE0UXo1Q3RBcjFPcl9YYy1OZUhteDZWekxHdWRLM1M1alNZTkJMWEhNOWd4S1NPSDBTWC12M0U2UGc9PQ==';
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -57,7 +61,9 @@ export const LiveChat = () => {
       });
 
       const data = await response.json();
-      return data.status === 'success' ? data.text : 'Sorry, I could not process your request.';
+      return data.status === 'success'
+        ? data.text
+        : 'Sorry, I could not process your request.';
     } catch (error) {
       console.error('API Error:', error);
       return 'Sorry, there was an error processing your request.';
@@ -92,7 +98,8 @@ export const LiveChat = () => {
     } catch (error) {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: 'Sorry, I could not connect to the server. Please try again later.',
+        content:
+          'Sorry, I could not connect to the server. Please try again later.',
         role: 'assistant',
         timestamp: new Date(),
       };
@@ -104,15 +111,24 @@ export const LiveChat = () => {
   };
 
   const handleEmailClick = () => {
-    const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isMobile =
+      /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
     isMobile
       ? (window.location.href = 'mailto:ridoan.zisan@gmail.com')
-      : window.open('https://mail.google.com/mail/?view=cm&fs=1&to=ridoan.zisan@gmail.com', '_blank');
+      : window.open(
+          'https://mail.google.com/mail/?view=cm&fs=1&to=ridoan.zisan@gmail.com',
+          '_blank'
+        );
     setIsMenuOpen(false);
   };
 
   return (
-    <div className="fixed bottom-6 right-6 flex flex-col items-end gap-2" ref={containerRef}>
+    <div
+      className="fixed bottom-6 right-6 flex flex-col items-end gap-2"
+      ref={containerRef}
+    >
       {/* Email Button - Animated */}
       {isMenuOpen && (
         <>
@@ -154,7 +170,9 @@ export const LiveChat = () => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         className={`p-4 rounded-full shadow-md ${
-          isMenuOpen ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600'
+          isMenuOpen
+            ? 'bg-red-500 hover:bg-red-600'
+            : 'bg-blue-500 hover:bg-blue-600'
         } text-white transition-colors`}
         title={isMenuOpen ? 'Close menu' : 'Open menu'}
       >
@@ -168,12 +186,12 @@ export const LiveChat = () => {
 
       {/* Chat Window */}
       {isChatOpen && (
-        <div className="fixed bottom-24 right-6 w-96 max-w-[calc(100vw-3rem)] bg-white rounded-lg shadow-xl z-50 flex flex-col max-h-[600px]">
+        <div className="fixed bottom-5 right-5 w-96 max-w-[calc(100vw-4rem)] bg-white rounded-lg shadow-xl z-50 flex flex-col max-h-[450px]">
           {/* Chat Header */}
           <div className="bg-blue-500 text-white p-4 rounded-t-lg flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Ghost className="w-6 h-6" />
-              <h2 className="font-semibold">Chat with Me</h2>
+              <h2 className="font-semibold">Ghost</h2>
             </div>
             <button
               onClick={() => setIsChatOpen(false)}
@@ -218,7 +236,9 @@ export const LiveChat = () => {
                       : 'bg-gray-100 text-gray-800'
                   }`}
                 >
-                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                  <p className="text-sm whitespace-pre-wrap">
+                    {message.content}
+                  </p>
                   <p className="text-xs mt-1 opacity-70">
                     {format(message.timestamp, 'HH:mm')}
                   </p>
@@ -236,7 +256,7 @@ export const LiveChat = () => {
                 </div>
               </div>
             )}
-            
+
             <div ref={messagesEndRef} />
           </div>
 
@@ -248,9 +268,9 @@ export const LiveChat = () => {
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Type your message..."
+                placeholder="message"
                 disabled={isLoading}
-                className="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 rounded-lg border border-gray-300 px--4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <button
                 type="submit"
