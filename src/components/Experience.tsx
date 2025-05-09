@@ -67,8 +67,8 @@ const Experience = ({ language }: ExperienceProps) => {
         bn: 'ওয়েব ডেভেলপমেন্ট প্রকল্পসমূহ',
       },
       role: {
-        en: 'Independent Developer | 2024-Present',
-        bn: 'স্বাধীন ডেভেলপার | ২০২৪-বর্তমান',
+        en: 'Independent Developer | 2023-Present',
+        bn: 'স্বাধীন ডেভেলপার | ২০২৩-বর্তমান',
       },
       projects: [
         {
@@ -77,8 +77,8 @@ const Experience = ({ language }: ExperienceProps) => {
             bn: 'বিওবিডিও',
           },
           description: {
-            en: 'React + Firebase blood management system with real-time donor database',
-            bn: 'রিয়েল-টাইম ডোনার ডাটাবেস সহ React ও Firebase দিয়ে তৈরি রক্ত ব্যবস্থাপনা সিস্টেম',
+            en: 'online blood donation website and web app',
+            bn: ' অনলাইন রক্তদান ওয়েবসাইট এবং ওয়েব অ্যাপ',
           },
           url: 'https://bobdo.netlify.app',
         },
@@ -88,8 +88,8 @@ const Experience = ({ language }: ExperienceProps) => {
             bn: 'ইউনিকনভার্টার',
           },
           description: {
-            en: 'Unit converter supporting 50+ measurement categories with PWA functionality',
-            bn: '৫০+ পরিমাপ বিভাগ সমর্থনকারী একক রূপান্তরকারী (PWA সক্ষম)',
+            en: 'Unit converter supporting 50+ measurement categories',
+            bn: '৫০+ পরিমাপ বিভাগ সমর্থনকারী একক রূপান্তরকারী',
           },
           url: 'https://uniconverter.netlify.app',
         },
