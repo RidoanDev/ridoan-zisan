@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '../lib/utils';
 
@@ -60,7 +60,10 @@ const InstallPWA = ({ language }: InstallPWAProps) => {
   const installApp = async () => {
     if (!installPrompt) return;
     
+    // Show the prompt
     await installPrompt.prompt();
+    
+    // Wait for user response
     const choiceResult = await installPrompt.userChoice;
     
     if (choiceResult.outcome === 'accepted') {
@@ -69,12 +72,14 @@ const InstallPWA = ({ language }: InstallPWAProps) => {
       console.log('User dismissed the install prompt');
     }
     
+    // Reset the deferred prompt variable
     setInstallPrompt(null);
     setShowBanner(false);
   };
 
   const dismissBanner = () => {
     setShowBanner(false);
+    // Set a flag in localStorage to not show again for a while
     localStorage.setItem('pwaInstallDismissed', Date.now().toString());
   };
 
@@ -85,7 +90,7 @@ const InstallPWA = ({ language }: InstallPWAProps) => {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
-      className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)] md:w-80 bg-white rounded-lg shadow-xl p-4 z-50"
+      className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-80 bg-white rounded-lg shadow-xl p-4 z-50"
     >
       <div className="flex items-start">
         <div className="mr-4">
