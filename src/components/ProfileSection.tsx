@@ -1,169 +1,124 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Element } from 'react-scroll';
-import { Download, ScrollText } from './icons';
 import { cn } from '../lib/utils';
 
-interface ProfileSectionProps {
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+};
+
+interface InstallPWAProps {
   language: 'en' | 'bn';
-  content: any;
-  scrollToSection: (section: string) => void;
 }
 
-const ProfileSection = ({ language, content, scrollToSection }: ProfileSectionProps) => {
+const InstallPWA = ({ language }: InstallPWAProps) => {
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [isInstalled, setIsInstalled] = useState(false);
+  const [showBanner, setShowBanner] = useState(false);
+
+  const content = {
+    en: {
+      title: 'Install App',
+      description: 'Install this app on your device for quick access.',
+      buttonText: 'Install',
+      dismissText: 'Later'
+    },
+    bn: {
+      title: 'অ্যাপ ইন্সটল করুন',
+      description: 'দ্রুত অ্যাক্সেসের জন্য আপনার ডিভাইসে এই অ্যাপটি ইন্সটল করুন।',
+      buttonText: 'ইন্সটল করুন',
+      dismissText: 'পরে'
+    }
+  };
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setInstallPrompt(e as BeforeInstallPromptEvent);
+      setShowBanner(true);
+    };
+
+    const handleAppInstalled = () => {
+      setIsInstalled(true);
+      setShowBanner(false);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setIsInstalled(true);
+    }
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
+  }, []);
+
+  const installApp = async () => {
+    if (!installPrompt) return;
+    
+    await installPrompt.prompt();
+    const choiceResult = await installPrompt.userChoice;
+    
+    if (choiceResult.outcome === 'accepted') {
+      console.log('User accepted the install prompt');
+    } else {
+      console.log('User dismissed the install prompt');
+    }
+    
+    setInstallPrompt(null);
+    setShowBanner(false);
+  };
+
+  const dismissBanner = () => {
+    setShowBanner(false);
+    localStorage.setItem('pwaInstallDismissed', Date.now().toString());
+  };
+
+  if (!showBanner || isInstalled) return null;
+
   return (
-    <Element name="profile">
-      <motion.header
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className={cn(
-          'relative pt-24 pb-16 overflow-hidden',
-          'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900',
-          'text-white'
-        )}
-      >
-        {/* Animated background elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
-          <motion.div
-            animate={{
-              scale: [1, 1.1, 1],
-              opacity: [0.3, 0.2, 0.3],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-            className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-purple-500/30 to-transparent rounded-full filter blur-3xl"
-          />
-          <motion.div
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.2, 0.3, 0.2],
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              ease: 'easeInOut',
-              delay: 1,
-            }}
-            className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-blue-500/20 to-transparent rounded-full filter blur-3xl"
-          />
-        </div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="flex flex-col lg:flex-row items-center gap-12">
-            {/* Profile Image */}
-            <motion.div
-              initial={{ scale: 0, rotate: -15 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{
-                type: 'spring',
-                stiffness: 260,
-                damping: 20,
-                delay: 0.2,
-              }}
-              whileHover={{ scale: 1.05 }}
-              className="relative group"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/75 to-blue-500/75 rounded-full blur-xl opacity-75 group-hover:opacity-100 transition-all duration-300"></div>
-              <div className="absolute inset-0 rounded-full border-4 border-white/10 group-hover:border-white/30 transition-all duration-500"></div>
-              <img
-                src="/profile.jpg"
-                alt="Md Ridoan Mahmud Zisan"
-                className="w-56 h-56 rounded-full border-4 border-white/20 shadow-2xl relative z-10 transition-all duration-300 group-hover:border-white/40"
-              />
-              <motion.div
-                className="absolute inset-0 rounded-full border-2 border-white/10"
-                initial={{ scale: 1, opacity: 0 }}
-                animate={{ scale: 1.2, opacity: 0 }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: 'easeOut',
-                }}
-              />
-            </motion.div>
-
-            {/* Profile Content */}
-            <div className="flex-1 text-center lg:text-left">
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.4 }}
-              >
-                <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-300">
-                  {content[language].name}
-                </h1>
-                <motion.p
-                  initial={{ y: 10, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.6 }}
-                  className="text-xl md:text-2xl mb-6 text-slate-200"
-                >
-                  {content[language].role.split(' | ').map((part: string, i: number) => (
-                    <motion.span
-                      key={i}
-                      className="inline-block mr-2"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.7 + i * 0.1 }}
-                    >
-                      {part}
-                      {i < content[language].role.split(' | ').length - 1 && ' | '}
-                    </motion.span>
-                  ))}
-                </motion.p>
-                <motion.p
-                  initial={{ y: 10, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.8 }}
-                  className="text-lg max-w-2xl mx-auto lg:mx-0 mb-8 text-slate-300 leading-relaxed"
-                >
-                  {content[language].statement}
-                </motion.p>
-              </motion.div>
-
-              {/* Action Buttons */}
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 1 }}
-                className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4"
-              >
-                <motion.a
-                  href="/Resume.pdf"
-                  download="Md Ridoan Mahmud Zisan.pdf"
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={cn(
-                    'px-8 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-xl',
-                    'bg-white text-slate-900 hover:bg-slate-100'
-                  )}
-                >
-                  <Download size={20} />
-                  {content[language].downloadCV}
-                </motion.a>
-                <motion.button
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => scrollToSection('certificates')}
-                  className={cn(
-                    'px-8 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-xl',
-                    'bg-transparent border-2 border-white/30 text-white',
-                    'hover:bg-white/10 hover:border-white/50'
-                  )}
-                >
-                  <ScrollText size={20} />
-                  {content[language].certifications}
-                </motion.button>
-              </motion.div>
-            </div>
+    <motion.div 
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 bg-white rounded-lg shadow-xl p-4 z-50"
+    >
+      <div className="flex items-start">
+        <div className="mr-4">
+          <div className="bg-indigo-100 p-2 rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-indigo-600">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
           </div>
         </div>
-      </motion.header>
-    </Element>
+        <div className="flex-1">
+          <h4 className="text-gray-900 font-medium">{content[language].title}</h4>
+          <p className="text-sm text-gray-600 mt-1">{content[language].description}</p>
+        </div>
+      </div>
+      <div className="flex justify-end gap-2 mt-4">
+        <button 
+          onClick={dismissBanner}
+          className={cn(
+            "px-3 py-1.5 text-sm rounded-md text-gray-600 hover:bg-gray-100 transition-colors"
+          )}
+        >
+          {content[language].dismissText}
+        </button>
+        <button 
+          onClick={installApp}
+          className={cn(
+            "px-3 py-1.5 text-sm rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+          )}
+        >
+          {content[language].buttonText}
+        </button>
+      </div>
+    </motion.div>
   );
 };
 
-export default ProfileSection;
+export default InstallPWA;
