@@ -69,10 +69,10 @@ const ProfileSection = ({ language, content, scrollToSection }: ProfileSectionPr
               <div className="absolute inset-0 bg-gradient-to-br from-purple-500/75 to-blue-500/75 rounded-full blur-xl opacity-75 group-hover:opacity-100 transition-all duration-300"></div>
               <div className="absolute inset-0 rounded-full border-4 border-white/10 group-hover:border-white/30 transition-all duration-500"></div>
               <img
-  src="/images/profile.jpg" 
-  alt="Md Ridoan Mahmud Zisan"
-  className="w-56 h-56 rounded-full border-4 border-white/20 shadow-2xl relative z-10 transition-all duration-300 group-hover:border-white/40"
-/>
+                src="/profile.jpg"
+                alt="Md Ridoan Mahmud Zisan"
+                className="w-56 h-56 rounded-full border-4 border-white/20 shadow-2xl relative z-10 transition-all duration-300 group-hover:border-white/40"
+              />
               <motion.div
                 className="absolute inset-0 rounded-full border-2 border-white/10"
                 initial={{ scale: 1, opacity: 0 }}
@@ -110,8 +110,7 @@ const ProfileSection = ({ language, content, scrollToSection }: ProfileSectionPr
                       transition={{ delay: 0.7 + i * 0.1 }}
                     >
                       {part}
-                      {i < content[language].role.split(' | ').length - 1 &&
-                        ' | '}
+                      {i < content[language].role.split(' | ').length - 1 && ' | '}
                     </motion.span>
                   ))}
                 </motion.p>
