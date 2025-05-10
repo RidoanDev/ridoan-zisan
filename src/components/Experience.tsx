@@ -1,4 +1,3 @@
-
 import { motion } from 'framer-motion';
 import { Element } from 'react-scroll';
 import { Briefcase, Target, HeartHandshake, ExternalLink, Facebook } from 'lucide-react';
@@ -24,7 +23,7 @@ const Experience = ({ language }: ExperienceProps) => {
         {
           label: {
             en: 'Facebook Page',
-            bn: 'ফেসবুক পেজ',
+            bn: 'ফেসবুক গ্রুপ',
           },
           url: 'https://www.facebook.com/groups/BOBO.BD',
           icon: <Facebook size={16} />,
@@ -60,6 +59,48 @@ const Experience = ({ language }: ExperienceProps) => {
       iconColor: 'text-red-500',
     },
     {
+      id: 'youth-hope',
+      type: 'volunteer',
+      title: {
+        en: 'Youth Hope BD',
+        bn: 'ইয়ুথ হোপ বিডি',
+      },
+      role: {
+        en: 'Volunteer & Developer | 2025-Present',
+        bn: 'স্বেচ্ছাসেবী ও ডেভেলপার | ২০২৫-বর্তমান',
+      },
+      links: [
+        {
+          label: {
+            en: 'Web Application',
+            bn: 'ওয়েব অ্যাপ্লিকেশন',
+          },
+          url: 'https://youthhope-bd.netlify.app',
+          icon: <ExternalLink size={16} />,
+        },
+      ],
+      achievements: [
+        {
+          description: {
+            en: 'Developed platform for youth development and social services',
+            bn: 'যুব উন্নয়ন ও সামাজিক সেবার জন্য প্ল্যাটফর্ম তৈরি করা হয়েছে',
+          },
+          icon: <Target size={18} className="text-green-500" />,
+        },
+        {
+          description: {
+            en: 'Created tools for volunteer management and event organization',
+            bn: 'স্বেচ্ছাসেবী ব্যবস্থাপনা ও ইভেন্ট আয়োজনের জন্য টুলস তৈরি করা হয়েছে',
+          },
+          icon: <HeartHandshake size={18} className="text-green-500" />,
+        },
+      ],
+      borderColor: 'border-green-500',
+      bgColor: 'bg-green-100',
+      hoverBgColor: 'hover:bg-green-50',
+      iconColor: 'text-green-500',
+    },
+    {
       id: 'projects',
       type: 'development',
       title: {
@@ -81,6 +122,17 @@ const Experience = ({ language }: ExperienceProps) => {
             bn: ' অনলাইন রক্তদান ওয়েবসাইট এবং ওয়েব অ্যাপ',
           },
           url: 'https://bobdo.netlify.app',
+        },
+        {
+          name: {
+            en: 'YouthHopeBD',
+            bn: 'ইয়ুথ হোপ বিডি',
+          },
+          description: {
+            en: 'platform for youth development and social services',
+            bn: ' যুব উন্নয়ন ও সামাজিক সেবার জন্য প্ল্যাটফর্ম তৈরি করা হয়েছে',
+          },
+          url: 'https://youthhope-bd.netlify.app',
         },
         {
           name: {
