@@ -86,12 +86,12 @@ const InstallPWA = ({ language }: InstallPWAProps) => {
   if (!showBanner || isInstalled) return null;
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 20 }}
-      className="fixed top-4 left-4 right-4 md:left-auto md:right-4 md:w-80 bg-white rounded-lg shadow-xl p-4 z-50"
-    >
+    <motion.div
+  initial={{ opacity: 0, y: 50 }}
+  animate={{ opacity: 1, y: 0 }}
+  exit={{ opacity: 0, y: 20 }}
+  className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 md:w-80 bg-white rounded-lg shadow-xl p-4 z-50"
+>
       <div className="flex items-start">
         <div className="mr-4">
           <div className="bg-indigo-100 p-2 rounded-full">
