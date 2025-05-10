@@ -22,7 +22,7 @@ const Experience = ({ language }: ExperienceProps) => {
       links: [
         {
           label: {
-            en: 'Facebook Page',
+            en: 'Facebook Group',
             bn: 'ফেসবুক গ্রুপ',
           },
           url: 'https://www.facebook.com/groups/BOBO.BD',
