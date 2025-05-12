@@ -1,22 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {
-  Send,
-  Ghost,
-  User,
-  Loader2,
-  X,
-  Mail,
-  Briefcase,
-  GraduationCap,
-  Award,
-  Heart,
-  Linkedin,
-  Phone,
-  MapPin,
-  ExternalLink,
-} from 'lucide-react';
+import { Send, Ghost, User, Loader2, X } from 'lucide-react';
 import { format } from 'date-fns';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Message {
   id: string;
@@ -25,18 +10,83 @@ interface Message {
   timestamp: Date;
 }
 
-export const LiveChat = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isGhostHovering, setIsGhostHovering] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+const QUICK_QUESTIONS = [
+  "What are his skills?",
+  "Tell me about his education",
+  "Show me his projects",
+  "How can I contact him?"
+];
 
-  // Ghost floating animation variants
+const MessageBubble = ({ 
+  message,
+  isTyping = false
+}: {
+  message: Message;
+  isTyping?: boolean;
+}) => {
+  const formattedContent = formatMessageContent(message.content);
+  
+  return (
+    <div className={`flex items-start gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}>
+      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+        message.role === 'user' ? 'bg-blue-500' : 'bg-gray-600'
+      }`}>
+        {message.role === 'user' ? (
+          <User className="w-5 h-5 text-white" />
+        ) : (
+          <Ghost className="w-5 h-5 text-white" />
+        )}
+      </div>
+      <div className={`rounded-2xl px-4 py-2 max-w-[80%] ${
+        message.role === 'user'
+          ? 'bg-blue-500 text-white'
+          : 'bg-gray-100 text-gray-800'
+      }`}>
+        {isTyping ? (
+          <TypingIndicator />
+        ) : (
+          <>
+            <div className="text-sm whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: formattedContent }} />
+            <p className="text-xs mt-1 opacity-70">
+              {format(message.timestamp, 'HH:mm')}
+            </p>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const TypingIndicator = () => {
+  return (
+    <div className="flex gap-1 items-center">
+      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0ms' }} />
+      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '150ms' }} />
+      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+    </div>
+  );
+};
+
+const formatMessageContent = (content: string) => {
+  let formatted = content.replace(
+    /(https?:\/\/[^\s]+)/g, 
+    '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">$1</a>'
+  );
+  formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  formatted = formatted.replace(/\n/g, '<br>');
+  return formatted;
+};
+
+const ChatHeader = ({ 
+  onClose,
+  isGhostHovering,
+  setIsGhostHovering
+}: {
+  onClose: () => void;
+  isGhostHovering: boolean;
+  setIsGhostHovering: (hovering: boolean) => void;
+}) => {
   const ghostVariants = {
     hover: {
       y: [0, -10, 0, -5, 0],
@@ -56,7 +106,133 @@ export const LiveChat = () => {
     },
   };
 
-  // Message animation variants
+  return (
+    <div className="bg-blue-500 text-white p-2 rounded-t-lg flex justify-between items-center">
+      <div className="flex items-center gap-2">
+        <motion.div
+          variants={ghostVariants}
+          animate={isGhostHovering ? 'hover' : 'float'}
+          onMouseEnter={() => setIsGhostHovering(true)}
+          onMouseLeave={() => setIsGhostHovering(false)}
+        >
+          <Ghost className="w-5 h-5" />
+        </motion.div>
+        <h2 className="font-semibold">Ghost AI</h2>
+      </div>
+      <button
+        onClick={onClose}
+        className="text-white/80 hover:text-white transition-colors"
+        aria-label="Close chat"
+      >
+        <X size={20} />
+      </button>
+    </div>
+  );
+};
+
+const EmptyState = () => {
+  const ghostVariants = {
+    float: {
+      y: [0, -15, 0],
+      transition: {
+        duration: 3,
+        repeat: Infinity,
+        ease: 'easeInOut',
+      },
+    },
+  };
+
+  return (
+    <div className="text-center text-gray-500 mt-8">
+      <motion.div variants={ghostVariants} animate="float">
+        <Ghost className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+      </motion.div>
+      <p className="text-lg">Hello!</p>
+      <p className="text-sm mt-2">
+        Ask me about Md Ridoan Mahmud Zisan - his education, skills,
+        projects, or anything else!
+      </p>
+      <div className="mt-4 text-xs text-gray-400">
+        <p>Try asking:</p>
+        {QUICK_QUESTIONS.map((question, index) => (
+          <p key={index}>{question}</p>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const MessageInput = ({
+  input,
+  setInput,
+  isLoading,
+  onSubmit
+}: {
+  input: string;
+  setInput: (value: string) => void;
+  isLoading: boolean;
+  onSubmit: (e: React.FormEvent) => void;
+}) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  return (
+    <form onSubmit={onSubmit} className="border-t p-4">
+      <div className="flex gap-2">
+        <input
+          ref={inputRef}
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Ask about Md Ridoan Mahmud Zisan..."
+          disabled={isLoading}
+          className="flex-1 rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+          aria-label="Type your message"
+        />
+        <motion.button
+          type="submit"
+          disabled={!input.trim() || isLoading}
+          className="bg-blue-500 text-white rounded-lg px-3 py-2 hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          whileHover={!isLoading && input.trim() ? { scale: 1.05 } : {}}
+          whileTap={!isLoading && input.trim() ? { scale: 0.95 } : {}}
+          aria-label="Send message"
+        >
+          <Send className="w-4 h-4" />
+        </motion.button>
+      </div>
+    </form>
+  );
+};
+
+const ChatWindow = ({
+  messages,
+  isLoading,
+  onClose,
+  input,
+  setInput,
+  onSubmit
+}: {
+  messages: Message[];
+  isLoading: boolean;
+  onClose: () => void;
+  input: string;
+  setInput: (value: string) => void;
+  onSubmit: (e: React.FormEvent) => void;
+}) => {
+  const [isGhostHovering, setIsGhostHovering] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isLoading]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   const messageVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -69,11 +245,120 @@ export const LiveChat = () => {
     },
   };
 
-  // Enhanced constant replies with more information
+  return (
+    <motion.div
+      className="fixed bottom-5 right-6 w-100 max-w-[calc(101vw-3rem)] bg-white rounded-lg shadow-xl z-[9999] flex flex-col max-h-[440px]"
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+      aria-modal="true"
+      aria-labelledby="chat-header"
+    >
+      <ChatHeader 
+        onClose={onClose} 
+        isGhostHovering={isGhostHovering}
+        setIsGhostHovering={setIsGhostHovering}
+      />
+
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-[300px] max-h-[400px]">
+        {messages.length === 0 && !isLoading ? (
+          <EmptyState />
+        ) : (
+          <AnimatePresence>
+            {messages.map((message) => (
+              <motion.div
+                key={message.id}
+                variants={messageVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                <MessageBubble message={message} />
+              </motion.div>
+            ))}
+            {isLoading && (
+              <motion.div
+                variants={messageVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                <MessageBubble 
+                  message={{
+                    id: 'typing',
+                    content: '',
+                    role: 'assistant',
+                    timestamp: new Date()
+                  }} 
+                  isTyping={true}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
+      <MessageInput 
+        input={input}
+        setInput={setInput}
+        isLoading={isLoading}
+        onSubmit={onSubmit}
+      />
+    </motion.div>
+  );
+};
+
+const GhostButton = ({ onClick }: { onClick: () => void }) => {
+  const [isHovering, setIsHovering] = useState(false);
+
+  const ghostVariants = {
+    hover: {
+      y: [0, -10, 0, -5, 0],
+      transition: {
+        duration: 2,
+        repeat: Infinity,
+        ease: 'easeInOut',
+      },
+    },
+    float: {
+      y: [0, -15, 0],
+      transition: {
+        duration: 3,
+        repeat: Infinity,
+        ease: 'easeInOut',
+      },
+    },
+  };
+
+  return (
+    <motion.button
+      onClick={onClick}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.95 }}
+      className="p-4 bg-blue-500 rounded-full shadow-md text-white transition-colors hover:bg-blue-600"
+      title="Chat with Ghost AI"
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
+      <motion.div
+        variants={ghostVariants}
+        animate={isHovering ? 'hover' : 'float'}
+      >
+        <Ghost size={24} />
+      </motion.div>
+    </motion.button>
+  );
+};
+
+export const LiveChat = () => {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
   const getConstantReply = (userInput: string): string | null => {
     const lowerInput = userInput.toLowerCase();
 
-    // Developer/Creator information
     if (
       lowerInput.includes('developer') ||
       lowerInput.includes('creator') ||
@@ -93,7 +378,6 @@ export const LiveChat = () => {
       \n- 🌐 Religion: Humanity`;
     }
 
-    // Education information
     if (
       lowerInput.includes('education') ||
       lowerInput.includes('study') ||
@@ -114,7 +398,6 @@ export const LiveChat = () => {
       \n- Major: Higher Mathematics`;
     }
 
-    // Skills information
     if (
       lowerInput.includes('skill') ||
       lowerInput.includes('expertise') ||
@@ -135,15 +418,9 @@ export const LiveChat = () => {
       \n- Team Collaboration
       \n- Time Management
       \n- Problem Solving
-      \n- Professional Ethics
-      \n\n🎨 Additional Skills:
-      \n- Canva/Photoshop
-      \n- Social Media Management
-      \n- Customer Service
-      \n- Basic Troubleshooting`;
+      \n- Professional Ethics`;
     }
 
-    // Projects information
     if (
       lowerInput.includes('project') ||
       lowerInput.includes('work') ||
@@ -166,7 +443,6 @@ export const LiveChat = () => {
       \n- Link: https://devhub-i.netlify.app`;
     }
 
-    // Certificates information
     if (
       lowerInput.includes('certificate') ||
       lowerInput.includes('certification') ||
@@ -188,7 +464,6 @@ export const LiveChat = () => {
       \n- Corporate Skills (10 Minute School)`;
     }
 
-    // Contact information
     if (
       lowerInput.includes('contact') ||
       lowerInput.includes('email') ||
@@ -201,11 +476,9 @@ export const LiveChat = () => {
       \n📧 Email: ridoan.zisan@gmail.com
       \n📞 Phone: +8801712525910
       \n📍 Location: Bogura, Bangladesh
-      \n🔗 LinkedIn: https://linkedin.com/in/ridoan2007
-      \n\nYou can also use the email button in the bottom right corner to send him a message directly.`;
+      \n🔗 LinkedIn: https://linkedin.com/in/ridoan2007`;
     }
 
-    // Volunteer work
     if (
       lowerInput.includes('volunteer') ||
       lowerInput.includes('blood') ||
@@ -223,7 +496,6 @@ export const LiveChat = () => {
       \n\n🔗 Blood Management App: https://bobdo.netlify.app`;
     }
 
-    // Family information
     if (
       lowerInput.includes('family') ||
       lowerInput.includes('father') ||
@@ -238,7 +510,6 @@ export const LiveChat = () => {
       \n- Siblings: 1 Younger Sister`;
     }
 
-    // Basic greetings
     if (
       lowerInput.includes('hello') ||
       lowerInput.includes('hi') ||
@@ -247,12 +518,10 @@ export const LiveChat = () => {
       return "Hello there! I'm Ghost AI, here to tell you about Md Ridoan Mahmud Zisan. How can I help you today?\n\nYou can ask about:\n- His education\n- Skills\n- Projects\n- Certifications\n- Volunteer work\n- Contact information\n- Or anything else!";
     }
 
-    // Thank you responses
     if (lowerInput.includes('thank') || lowerInput.includes('thanks')) {
       return "You're welcome! Let me know if you need any more information about Md Ridoan Mahmud Zisan.";
     }
 
-    // Age information
     if (
       lowerInput.includes('age') ||
       lowerInput.includes('old') ||
@@ -273,7 +542,6 @@ export const LiveChat = () => {
       return `Md Ridoan Mahmud Zisan is ${age} years old (born December 31, 2007).`;
     }
 
-    // Blood group
     if (lowerInput.includes('blood') && lowerInput.includes('group')) {
       return "Md Ridoan Mahmud Zisan's blood group is B+ (B positive).";
     }
@@ -281,46 +549,16 @@ export const LiveChat = () => {
     return null;
   };
 
-  useEffect(() => {
-    if (isChatOpen) {
-      inputRef.current?.focus();
-    }
-  }, [isChatOpen]);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages, isLoading]);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const callAPI = async (prompt: string) => {
+  const callAPI = async (prompt: string): Promise<string> => {
     setIsLoading(true);
 
-    // Check for constant replies first
     const constantReply = getConstantReply(prompt);
     if (constantReply) {
       return constantReply;
     }
 
     try {
-      const apiUrl =
-        'https://backend.buildpicoapps.com/aero/run/llm-api?pk=v1-Z0FBQUFBQm5HUEtMSjJkakVjcF9IQ0M0VFhRQ0FmSnNDSHNYTlJSblE0UXo1Q3RBcjFPcl9YYy1OZUhteDZWekxHdWRLM1M1alNZTkJMWEhNOWd4S1NPSDBTWC12M0U2UGc9PQ==';
+      const apiUrl = 'https://backend.buildpicoapps.com/aero/run/llm-api?pk=v1-Z0FBQUFBQm5HUEtMSjJkakVjcF9IQ0M0VFhRQ0FmSnNDSHNYTlJSblE0UXo1Q3RBcjFPcl9YYy1OZUhteDZWekxHdWRLM1M1alNZTkJMWEhNOWd4S1NPSDBTWC12M0U2UGc9PQ==';
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -328,9 +566,7 @@ export const LiveChat = () => {
       });
 
       const data = await response.json();
-      return data.status === 'success'
-        ? data.text
-        : 'Sorry, I could not process your request.';
+      return data.status === 'success' ? data.text : 'Sorry, I could not process your request.';
     } catch (error) {
       console.error('API Error:', error);
       return 'Sorry, there was an error processing your request.';
@@ -365,243 +601,30 @@ export const LiveChat = () => {
     } catch (error) {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content:
-          'Sorry, I could not connect to the server. Please try again later.',
+        content: 'Sorry, I could not connect to the server. Please try again later.',
         role: 'assistant',
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
-    } finally {
-      setIsLoading(false);
-      inputRef.current?.focus();
     }
   };
 
-  const handleEmailClick = () => {
-    const isMobile =
-      /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      );
-    isMobile
-      ? (window.location.href = 'mailto:ridoan.zisan@gmail.com')
-      : window.open(
-          'https://mail.google.com/mail/?view=cm&fs=1&to=ridoan.zisan@gmail.com',
-          '_blank'
-        );
-    setIsMenuOpen(false);
-  };
-
   return (
-    <div
-      className="fixed bottom-6 right-6 flex flex-col items-end gap-2 z-[9999]"
-      ref={containerRef}
-    >
-      {/* Email Button - Animated */}
-      {isMenuOpen && (
-        <>
-          <motion.a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              handleEmailClick();
-            }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
-            whileHover={{ scale: 1.05 }}
-            className="bg-green-500 text-white p-4 rounded-full shadow-md hover:bg-green-600 transition-colors"
-            title="Send Email"
-          >
-            <Mail size={24} />
-          </motion.a>
-          <motion.button
-            onClick={() => {
-              setIsChatOpen(true);
-              setIsMenuOpen(false);
-            }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
-            whileHover={{ scale: 1.05 }}
-            className="bg-blue-500 text-white p-4 rounded-full shadow-md hover:bg-blue-600 transition-colors"
-            title="Open Chat"
-          >
-            <Ghost size={24} />
-          </motion.button>
-        </>
-      )}
-
-      {/* Main Floating Button - Smart Toggle */}
-      <motion.button
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        className={`p-4 rounded-full shadow-md ${
-          isMenuOpen
-            ? 'bg-red-500 hover:bg-red-600'
-            : 'bg-blue-500 hover:bg-blue-600'
-        } text-white transition-colors`}
-        title={isMenuOpen ? 'Close menu' : 'Open menu'}
-      >
-        <motion.div
-          animate={{ rotate: isMenuOpen ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
-        >
-          <Mail size={24} />
-        </motion.div>
-      </motion.button>
-
-      {/* Chat Window */}
-      {isChatOpen && (
-        <motion.div
-          className="fixed bottom-5 right-6 w-100 max-w-[calc(101vw-3rem)] bg-white rounded-lg shadow-xl z-[9999] flex flex-col max-h-[440px]"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.9 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-        >
-          {/* Chat Header */}
-          <div className="bg-blue-500 text-white p-2 rounded-t-lg flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <motion.div
-                variants={ghostVariants}
-                animate={isGhostHovering ? 'hover' : 'float'}
-                onMouseEnter={() => setIsGhostHovering(true)}
-                onMouseLeave={() => setIsGhostHovering(false)}
-              >
-                <Ghost className="w-5 h-5" />
-              </motion.div>
-              <h2 className="font-semibold">Ghost</h2>
-            </div>
-            <button
-              onClick={() => setIsChatOpen(false)}
-              className="text-white/80 hover:text-white transition-colors"
-              aria-label="Close chat"
-            >
-              <X size={20} />
-            </button>
-          </div>
-
-          {/* Messages Container */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-[300px] max-h-[400px]">
-            {messages.length === 0 && (
-              <motion.div
-                className="text-center text-gray-500 mt-8"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-              >
-                <motion.div variants={ghostVariants} animate="float">
-                  <Ghost className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                </motion.div>
-                <p className="text-lg">Hello!</p>
-                <p className="text-sm mt-2">
-                  Ask me about Md Ridoan Mahmud Zisan - his education, skills,
-                  projects, or anything else!
-                </p>
-                <div className="mt-4 text-xs text-gray-400">
-                  <p>Try asking:</p>
-                  <p>"What are his skills?"</p>
-                  <p>"Tell me about his education"</p>
-                  <p>"Show me his projects"</p>
-                </div>
-              </motion.div>
-            )}
-
-            {messages.map((message) => (
-              <motion.div
-                key={message.id}
-                className={`flex items-start gap-3 ${
-                  message.role === 'user' ? 'flex-row-reverse' : ''
-                }`}
-                variants={messageVariants}
-                initial="hidden"
-                animate="visible"
-              >
-                <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    message.role === 'user' ? 'bg-blue-500' : 'bg-gray-600'
-                  }`}
-                >
-                  {message.role === 'user' ? (
-                    <User className="w-5 h-5 text-white" />
-                  ) : (
-                    <Ghost className="w-5 h-5 text-white" />
-                  )}
-                </div>
-                <div
-                  className={`rounded-2xl px-4 py-2 max-w-[80%] ${
-                    message.role === 'user'
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-100 text-gray-800'
-                  }`}
-                >
-                  <p className="text-sm whitespace-pre-wrap">
-                    {message.content}
-                  </p>
-                  <p className="text-xs mt-1 opacity-70">
-                    {format(message.timestamp, 'HH:mm')}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-
-            {isLoading && (
-              <motion.div
-                className="flex items-start gap-3"
-                variants={messageVariants}
-                initial="hidden"
-                animate="visible"
-              >
-                <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center">
-                  <Ghost className="w-5 h-5 text-white" />
-                </div>
-                <div className="bg-gray-100 rounded-2xl px-4 py-2">
-                  <motion.div
-                    animate={{
-                      rotate: 360,
-                      transition: {
-                        duration: 1,
-                        repeat: Infinity,
-                        ease: 'linear',
-                      },
-                    }}
-                  >
-                    <Loader2 className="w-5 h-5 text-gray-500" />
-                  </motion.div>
-                </div>
-              </motion.div>
-            )}
-
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Input Form */}
-          <div className="border-t p-4">
-            <form onSubmit={handleSubmit} className="flex gap-2">
-              <input
-                ref={inputRef}
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask about Md Ridoan Mahmud Zisan..."
-                disabled={isLoading}
-                className="flex-1 rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
-              />
-              <motion.button
-                type="submit"
-                disabled={!input.trim() || isLoading}
-                className="bg-blue-500 text-white rounded-lg px-3 py-2 hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                whileHover={!isLoading && input.trim() ? { scale: 1.05 } : {}}
-                whileTap={!isLoading && input.trim() ? { scale: 0.95 } : {}}
-              >
-                <Send className="w-4 h-4" />
-                <span className="sr-only">Send</span>
-              </motion.button>
-            </form>
-          </div>
-        </motion.div>
-      )}
+    <div className="fixed bottom-6 right-6 z-[9999]">
+      <GhostButton onClick={() => setIsChatOpen(!isChatOpen)} />
+      
+      <AnimatePresence>
+        {isChatOpen && (
+          <ChatWindow
+            messages={messages}
+            isLoading={isLoading}
+            onClose={() => setIsChatOpen(false)}
+            input={input}
+            setInput={setInput}
+            onSubmit={handleSubmit}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
