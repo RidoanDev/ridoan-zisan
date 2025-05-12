@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Ghost, User, Loader2, X } from 'lucide-react';
+import { Send, Ghost, User, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -18,11 +18,9 @@ const QUICK_QUESTIONS = [
 ];
 
 const MessageBubble = ({ 
-  message,
-  isTyping = false
+  message
 }: {
   message: Message;
-  isTyping?: boolean;
 }) => {
   const formattedContent = formatMessageContent(message.content);
   
@@ -42,27 +40,11 @@ const MessageBubble = ({
           ? 'bg-blue-500 text-white'
           : 'bg-gray-100 text-gray-800'
       }`}>
-        {isTyping ? (
-          <TypingIndicator />
-        ) : (
-          <>
-            <div className="text-sm whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: formattedContent }} />
-            <p className="text-xs mt-1 opacity-70">
-              {format(message.timestamp, 'HH:mm')}
-            </p>
-          </>
-        )}
+        <div className="text-sm whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: formattedContent }} />
+        <p className="text-xs mt-1 opacity-70">
+          {format(message.timestamp, 'HH:mm')}
+        </p>
       </div>
-    </div>
-  );
-};
-
-const TypingIndicator = () => {
-  return (
-    <div className="flex gap-1 items-center">
-      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0ms' }} />
-      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '150ms' }} />
-      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '300ms' }} />
     </div>
   );
 };
@@ -192,16 +174,14 @@ const MessageInput = ({
           className="flex-1 rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
           aria-label="Type your message"
         />
-        <motion.button
+        <button
           type="submit"
           disabled={!input.trim() || isLoading}
           className="bg-blue-500 text-white rounded-lg px-3 py-2 hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-          whileHover={!isLoading && input.trim() ? { scale: 1.05 } : {}}
-          whileTap={!isLoading && input.trim() ? { scale: 0.95 } : {}}
           aria-label="Send message"
         >
           <Send className="w-4 h-4" />
-        </motion.button>
+        </button>
       </div>
     </form>
   );
@@ -227,7 +207,7 @@ const ChatWindow = ({
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, isLoading]);
+  }, [messages]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -276,23 +256,6 @@ const ChatWindow = ({
                 <MessageBubble message={message} />
               </motion.div>
             ))}
-            {isLoading && (
-              <motion.div
-                variants={messageVariants}
-                initial="hidden"
-                animate="visible"
-              >
-                <MessageBubble 
-                  message={{
-                    id: 'typing',
-                    content: '',
-                    role: 'assistant',
-                    timestamp: new Date()
-                  }} 
-                  isTyping={true}
-                />
-              </motion.div>
-            )}
           </AnimatePresence>
         )}
         <div ref={messagesEndRef} />
