@@ -89,6 +89,13 @@ export const certificates = [
   },
   {
     title: {
+      en: "Python for Data Science and Al",
+      bn: "ডেটা সায়েন্স এবং আল এর জন্য পাইথন"
+    },
+    image: "https://i.postimg.cc/GhG5stCC/Python-for-Data-Science-and-Al.png"
+  },
+  {
+    title: {
       en: "Machine Learning",
       bn: "মেশিন লার্নিং"
     },
