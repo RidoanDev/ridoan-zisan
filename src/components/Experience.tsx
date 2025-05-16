@@ -33,7 +33,7 @@ const Experience = ({ language }: ExperienceProps) => {
             en: 'Web Application',
             bn: 'ওয়েব অ্যাপ্লিকেশন',
           },
-          url: 'https://bobdo.netlify.app',
+          url: 'https://bobdo.vercel.app',
           icon: <ExternalLink size={16} />,
         },
       ],
@@ -121,7 +121,7 @@ const Experience = ({ language }: ExperienceProps) => {
             en: 'online blood donation website and web app',
             bn: ' অনলাইন রক্তদান ওয়েবসাইট এবং ওয়েব অ্যাপ',
           },
-          url: 'https://bobdo.netlify.app',
+          url: 'https://bobdo.vercel.app',
         },
         {
           name: {
