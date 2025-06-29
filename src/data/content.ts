@@ -93,14 +93,14 @@ export const certificates = [
       en: "Introduction to Artificial Intelligence",
       bn: "কৃত্রিম বুদ্ধিমত্তার ভূমিকা"
     },
-    image: "https://i.postimg.cc/VsZdZ25P/introduction-to-artificial-intelligence.png"
+    image: "https://i.postimg.cc/fTWdVzN6/introduction-to-artificial-intelligence.png"
   },
   {
     title: {
       en: "Machine Learning",
       bn: "মেশিন লার্নিং"
     },
-    image: "https://i.postimg.cc/mrSrY5Kq/machine-learning.png"
+    image: "https://i.postimg.cc/7YB27FPb/machine-learning.png"
   },
 
   // Other High-Demand Tech Skills
@@ -109,7 +109,7 @@ export const certificates = [
       en: "Introduction to Cyber Security",
       bn: "সাইবার সিকিউরিটি পরিচিতি"
     },
-    image: "https://i.postimg.cc/RZKhFFdv/introduction-to-cyber-security.png"
+    image: "https://i.postimg.cc/QdtcyXYp/introduction-to-cyber-security.png"
   },
   {
     title: {
