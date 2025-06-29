@@ -136,6 +136,13 @@ export const certificates = [
   },
   {
     title: {
+      en: "Gender equality and human rights in climate action and renewable energy",
+      bn: "জলবায়ু কর্ম ও নবায়নযোগ্য শক্তিতে লিঙ্গ সমতা ও মানবাধিকার"
+    },
+    image: "https://i.postimg.cc/V6Dd8VRM/Gender-equality-and-human-rights-in-climate-action-and-renewable-energy.jpg"
+  },
+  {
+    title: {
       en: "Net Zero 101- What, Why and How",
       bn: "নেট জিরো ১০১: কি, কেন এবং কিভাবে"
     },
@@ -154,13 +161,6 @@ export const certificates = [
       bn: "জাতিসংঘের জলবায়ু পরিবর্তন প্রক্রিয়া"
     },
     image: "https://i.postimg.cc/zv4DDZRL/The-UN-Climate-Change-process.jpg"
-  },
-  {
-    title: {
-      en: "Gender equality and human rights in climate action and renewable energy",
-      bn: "জলবায়ু কর্ম ও নবায়নযোগ্য শক্তিতে লিঙ্গ সমতা ও মানবাধিকার"
-    },
-    image: "https://i.postimg.cc/V6Dd8VRM/Gender-equality-and-human-rights-in-climate-action-and-renewable-energy.jpg"
   },
 
   // Academic & Competitions
