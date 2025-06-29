@@ -75,7 +75,7 @@ const Experience = ({ language }: ExperienceProps) => {
             en: 'Web Application',
             bn: 'ওয়েব অ্যাপ্লিকেশন',
           },
-          url: 'https://youthhope-bd.netlify.app',
+          url: 'https://youth-hope.netlify.app',
           icon: <ExternalLink size={16} />,
         },
       ],
@@ -132,7 +132,7 @@ const Experience = ({ language }: ExperienceProps) => {
             en: 'platform for youth development and social services',
             bn: ' যুব উন্নয়ন ও সামাজিক সেবার জন্য প্ল্যাটফর্ম তৈরি করা হয়েছে',
           },
-          url: 'https://youthhope-bd.netlify.app',
+          url: 'https://youth-hope.netlify.app',
         },
         {
           name: {
