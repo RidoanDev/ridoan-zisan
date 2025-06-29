@@ -19,7 +19,6 @@ const CertificateSlider = ({ certificates, language }: CertificateSliderProps) =
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
-  const [showTitle, setShowTitle] = useState(false);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -68,14 +67,12 @@ const CertificateSlider = ({ certificates, language }: CertificateSliderProps) =
   // Navigation handlers
   const handleNavigation = useCallback((newIndex: number) => {
     setIsAutoPlaying(false);
-    setShowTitle(true);
     setCurrentIndex(newIndex);
-
-    const titleTimeout = setTimeout(() => {
-      setShowTitle(false);
+    
+    // Resume autoplay after 3 seconds
+    setTimeout(() => {
+      setIsAutoPlaying(true);
     }, 3000);
-
-    return () => clearTimeout(titleTimeout);
   }, []);
 
   const handlePrevious = useCallback(() => {
@@ -120,13 +117,13 @@ const CertificateSlider = ({ certificates, language }: CertificateSliderProps) =
     setIsFullscreen(!isFullscreen);
   };
 
-  // Auto-play functionality
+  // Auto-play functionality - every 2 seconds
   useEffect(() => {
     if (!isAutoPlaying || isLoading) return;
 
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev === certificates.length - 1 ? 0 : prev + 1));
-    }, 5000);
+    }, 2000);
 
     return () => clearInterval(timer);
   }, [certificates.length, isAutoPlaying, isLoading]);
@@ -142,6 +139,67 @@ const CertificateSlider = ({ certificates, language }: CertificateSliderProps) =
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
     };
   }, []);
+
+  // LinkedIn-style premium dot navigation calculation with 11 dots
+  const getVisibleDots = () => {
+    const maxDots = 11;
+    const total = certificates.length;
+    
+    if (total <= maxDots) {
+      return certificates.map((_, index) => index);
+    }
+    
+    const current = currentIndex;
+    const center = Math.floor(maxDots / 2);
+    
+    let start = Math.max(0, current - center);
+    let end = Math.min(total - 1, current + center);
+    
+    // Adjust if we're near the boundaries
+    if (end - start + 1 < maxDots) {
+      if (start === 0) {
+        end = Math.min(total - 1, maxDots - 1);
+      } else if (end === total - 1) {
+        start = Math.max(0, total - maxDots);
+      }
+    }
+    
+    const dots = [];
+    for (let i = start; i <= end; i++) {
+      dots.push(i);
+    }
+    return dots;
+  };
+
+  const getDotScale = (index: number) => {
+    const visibleDots = getVisibleDots();
+    const position = visibleDots.indexOf(index);
+    const center = Math.floor(visibleDots.length / 2);
+    const distance = Math.abs(position - center);
+    
+    if (index === currentIndex) return 1.2; // Current dot is largest but smaller
+    if (distance === 0) return 1.2;
+    if (distance === 1) return 1.0;
+    if (distance === 2) return 0.8;
+    if (distance === 3) return 0.6;
+    if (distance === 4) return 0.5;
+    return 0.3;
+  };
+
+  const getDotOpacity = (index: number) => {
+    const visibleDots = getVisibleDots();
+    const position = visibleDots.indexOf(index);
+    const center = Math.floor(visibleDots.length / 2);
+    const distance = Math.abs(position - center);
+    
+    if (index === currentIndex) return 1;
+    if (distance === 0) return 1;
+    if (distance === 1) return 0.8;
+    if (distance === 2) return 0.6;
+    if (distance === 3) return 0.4;
+    if (distance === 4) return 0.3;
+    return 0.2;
+  };
 
   // Loading state
   if (isLoading) {
@@ -184,10 +242,6 @@ const CertificateSlider = ({ certificates, language }: CertificateSliderProps) =
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -100 }}
             transition={{ duration: 0.5 }}
-            onClick={() => {
-              setShowTitle(true);
-              setTimeout(() => setShowTitle(false), 3000);
-            }}
           >
             {failedImages.has(certificates[currentIndex].image) ? (
               <div className="w-full h-full flex items-center justify-center bg-gray-200 rounded-lg">
@@ -232,71 +286,70 @@ const CertificateSlider = ({ certificates, language }: CertificateSliderProps) =
             <Expand className="w-4 h-4 sm:w-5 sm:h-5" />
           )}
         </button>
-
-        {/* Certificate Title */}
-        <AnimatePresence>
-          {showTitle && (
-            <motion.div
-              className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 text-left"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <h3 className="inline-block px-2 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2 bg-black/70 text-white text-xs sm:text-sm md:text-base font-medium sm:font-semibold rounded-md sm:rounded-lg backdrop-blur-sm">
-                {certificates[currentIndex].title[language]}
-              </h3>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
 
-      {/* Navigation Controls */}
+      {/* Navigation Controls - Always visible when not fullscreen */}
       {!isFullscreen && (
-        <div className="mt-1 sm:mt-2 md:mt-3">
-          {/* Navigation Dots */}
+        <div className="mt-3 sm:mt-4">
+          {/* Title with Navigation Arrows - Visible on all devices */}
+          <div className="flex items-center justify-between mb-3">
+            {/* Left Arrow - Visible on all devices */}
+            <button
+              onClick={handlePrevious}
+              className="flex p-2 text-gray-600 hover:text-green-600 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 rounded-full"
+              aria-label="Previous certificate"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+
+            {/* Certificate Title - Always visible */}
+            <div className="flex-1 text-center px-4">
+              <h3 className="text-sm sm:text-base md:text-lg font-medium text-gray-700 line-clamp-2">
+                {certificates[currentIndex].title[language]}
+              </h3>
+            </div>
+
+            {/* Right Arrow - Visible on all devices */}
+            <button
+              onClick={handleNext}
+              className="flex p-2 text-gray-600 hover:text-green-600 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 rounded-full"
+              aria-label="Next certificate"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* LinkedIn-style Premium Dot Navigation with 11 smaller dots */}
           {certificates.length > 1 && (
-            <div className="flex flex-col items-center">
-              <div className="flex justify-center space-x-1 sm:space-x-1.5 mx-0.5 sm:mx-1 md:mx-2">
-                {certificates.map((_, index) => (
+            <div className="flex justify-center mb-2">
+              <div className="flex items-center space-x-2">
+                {getVisibleDots().map((index) => (
                   <button
                     key={index}
-                    className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-300 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 ${
-                      index === currentIndex ? 'bg-green-600' : 'bg-gray-300 hover:bg-gray-400'
+                    className={`rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 ${
+                      index === currentIndex 
+                        ? 'bg-green-600' 
+                        : 'bg-gray-300 hover:bg-gray-400'
                     }`}
+                    style={{
+                      width: `${getDotScale(index) * 6}px`,
+                      height: `${getDotScale(index) * 6}px`,
+                      opacity: getDotOpacity(index),
+                      transform: `scale(${getDotScale(index)})`,
+                    }}
                     onClick={() => handleDotClick(index)}
                     aria-label={`Go to certificate ${index + 1}`}
                   />
                 ))}
               </div>
-              
-              {/* Position Counter */}
-              <div className="mt-1 px-2 py-0.5 bg-black/50 text-white text-xs rounded-md backdrop-blur-sm">
-                {currentIndex + 1} / {certificates.length}
-              </div>
             </div>
           )}
 
-          {/* Navigation Arrows */}
-          <div className="flex items-center justify-between w-full px-1 sm:px-2 md:px-4 mt-1 sm:mt-2">
-            {certificates.length > 1 && (
-              <>
-                <button
-                  onClick={handlePrevious}
-                  className="p-0.5 sm:p-1 text-gray-600 hover:text-green-600 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 rounded-full"
-                  aria-label="Previous certificate"
-                >
-                  <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-                </button>
-                <button
-                  onClick={handleNext}
-                  className="p-0.5 sm:p-1 text-gray-600 hover:text-green-600 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 rounded-full"
-                  aria-label="Next certificate"
-                >
-                  <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-                </button>
-              </>
-            )}
+          {/* Position Counter */}
+          <div className="flex justify-center">
+            <div className="px-3 py-1 bg-gray-100/80 text-gray-600 text-xs sm:text-sm rounded-full backdrop-blur-sm">
+              {currentIndex + 1} / {certificates.length}
+            </div>
           </div>
         </div>
       )}
