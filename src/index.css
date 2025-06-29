@@ -1,0 +1,130 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-slate-50;
+  }
+}
+
+@layer components {
+  .premium-card {
+    @apply bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-slate-100;
+  }
+  
+  .premium-input {
+    @apply bg-slate-50 border border-slate-200 focus:border-finance-purple focus:ring-1 focus:ring-finance-purple rounded-lg px-4 py-2.5 outline-none transition-all duration-200;
+  }
+  
+  .premium-button {
+    @apply bg-gradient-to-r from-finance-purple to-finance-deep-purple text-white font-medium py-2.5 px-5 rounded-lg hover:shadow-md transition-all duration-300 flex items-center justify-center gap-2;
+  }
+  
+  .premium-section {
+    @apply bg-white rounded-xl shadow-md p-6 border border-slate-100;
+  }
+  
+  .premium-title {
+    @apply text-2xl font-bold text-slate-800 mb-6;
+  }
+  
+  .premium-subtitle {
+    @apply text-lg font-medium text-slate-700 mb-4;
+  }
+
+  .section-card {
+    @apply bg-white p-6 rounded-lg shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300;
+  }
+
+  .icon-wrapper {
+    @apply p-2 rounded-lg flex items-center justify-center;
+  }
+
+  .nav-button {
+    @apply flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 font-medium text-sm;
+  }
+}
+
+@layer utilities {
+  .glass-effect {
+    @apply backdrop-blur-md bg-white/80 border border-white/20;
+  }
+  
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-finance-deep-purple to-finance-purple;
+  }
+  
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg;
+  }
+
+  .smooth-transition {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .fade-in {
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  .slide-up {
+    animation: slideUp 0.6s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive optimizations */
+@media (max-width: 768px) {
+  .premium-card {
+    @apply p-4;
+  }
+  
+  .premium-section {
+    @apply p-4;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
