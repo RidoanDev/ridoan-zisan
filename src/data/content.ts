@@ -72,6 +72,13 @@ export const certificates = [
     },
     image: "https://i.postimg.cc/nhk0pcgv/Foundations-of-Cyber-Security.png"
   },
+    {
+    title: {
+      en: "Google IT Support",
+      bn: "গুগল আইটি সাপোর্ট"
+    },
+    image: "https://i.postimg.cc/DwW5JXWN/Google-IT-Support.png"
+  },
   {
     title: {
       en: "Digital Marketing",
