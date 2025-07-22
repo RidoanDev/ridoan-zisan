@@ -64,20 +64,19 @@ export const content = {
 };
 
 export const certificates = [
-  // Google Certificates (Most valuable)
+    {
+    title: {
+      en: "Google IT Support",
+      bn: "গুগল আইটি সাপোর্ট"
+    },
+    image: "https://i.postimg.cc/SRk6P0YS/Google-IT-Support.png"
+  },
   {
     title: {
       en: "Foundations of Cybersecurity",
       bn: "সাইবার নিরাপত্তার ভিত্তি"
     },
     image: "https://i.postimg.cc/nhk0pcgv/Foundations-of-Cyber-Security.png"
-  },
-    {
-    title: {
-      en: "Google IT Support",
-      bn: "গুগল আইটি সাপোর্ট"
-    },
-    image: "https://i.postimg.cc/DwW5JXWN/Google-IT-Support.png"
   },
   {
     title: {
@@ -86,8 +85,6 @@ export const certificates = [
     },
     image: "https://i.postimg.cc/XvKr2JBs/digital-marketing.png"
   },
-
-  // IBM Certificates
   {
     title: {
       en: "Python for Data Science and AI",
@@ -109,15 +106,6 @@ export const certificates = [
     },
     image: "https://i.postimg.cc/7YB27FPb/machine-learning.png"
   },
-
-  // Other High-Demand Tech Skills
-  {
-    title: {
-      en: "Introduction to Cyber Security",
-      bn: "সাইবার সিকিউরিটি পরিচিতি"
-    },
-    image: "https://i.postimg.cc/QdtcyXYp/introduction-to-cyber-security.png"
-  },
   {
     title: {
       en: "Complete Web Development",
@@ -132,16 +120,7 @@ export const certificates = [
     },
     image: "https://i.postimg.cc/L6qhcvZY/Introduction-to-Python.jpg"
   },
-
-  // Sustainability & Global Issues (Growing importance)
     {
-    title: {
-      en: "BOBDO",
-      bn: "BOBDO"
-    },
-    image: "https://i.postimg.cc/8CfQNkjN/BOBDO.png"
-  },
-  {
     title: {
       en: "Gender equality and human rights in climate action and renewable energy",
       bn: "জলবায়ু কর্ম ও নবায়নযোগ্য শক্তিতে লিঙ্গ সমতা ও মানবাধিকার"
@@ -169,8 +148,13 @@ export const certificates = [
     },
     image: "https://i.postimg.cc/zv4DDZRL/The-UN-Climate-Change-process.jpg"
   },
-
-  // Academic & Competitions
+    {
+    title: {
+      en: "BOBDO",
+      bn: "BOBDO"
+    },
+    image: "https://i.postimg.cc/8CfQNkjN/BOBDO.png"
+  },
   {
     title: {
       en: "Bangladesh Mathematical Olympiad",
@@ -192,92 +176,4 @@ export const certificates = [
     },
     image: "https://i.postimg.cc/tTg8j6x0/GK-olympiad.jpg"
   },
-
-  // Professional Skills (Highly valuable for career growth)
-  {
-    title: {
-      en: "Presentation and Public Speaking",
-      bn: "প্রেজেন্টেশন ও পাবলিক স্পিকিং"
-    },
-    image: "https://i.postimg.cc/VvJLcL5Q/Presentation-and-Public-Speaking.png"
-  },
-  {
-    title: {
-      en: "CV writing and interview",
-      bn: "সিভি লেখা ও ইন্টারভিউ প্রস্তুতি"
-    },
-    image: "https://i.postimg.cc/cJGKMYCK/CV-writing-and-interview.jpg"
-  },
-  {
-    title: {
-      en: "Business Case Solving Certificate",
-      bn: "ব্যবসায়িক কেস সমাধান সার্টিফিকেট"
-    },
-    image: "https://i.postimg.cc/4y27zSHZ/Business-Case-Solving-Certificate.png"
-  },
-  {
-    title: {
-      en: "Communication hacks",
-      bn: "যোগাযোগ কৌশল"
-    },
-    image: "https://i.postimg.cc/dQ5yPLHX/Communication-hacks.jpg"
-  },
-  {
-    title: {
-      en: "Corporate etiquette",
-      bn: "কর্পোরেট শিষ্টাচার"
-    },
-    image: "https://i.postimg.cc/vHjxTCdt/Corporate-etiquette.jpg"
-  },
-  {
-    title: {
-      en: "Basic of management",
-      bn: "ম্যানেজমেন্টের মৌলিক বিষয়"
-    },
-    image: "https://i.postimg.cc/0jyKKsQc/Basic-of-management.jpg"
-  },
-  {
-    title: {
-      en: "Money management",
-      bn: "টাকা ব্যবস্থাপনা"
-    },
-    image: "https://i.postimg.cc/fLTRBvNb/Money-management.jpg"
-  },
-  {
-    title: {
-      en: "Microsoft Office Starter Course Certificate",
-      bn: "মাইক্রোসফ্ট অফিস প্রাথমিক কোর্স সার্টিফিকেট"
-    },
-    image: "https://i.postimg.cc/bvPJ2hVk/Microsoft-Office-Starter-Course-Certificate.png"
-  },
-  {
-    title: {
-      en: "Email Writing Certificate",
-      bn: "ইমেইল লেখার সার্টিফিকেট"
-    },
-    image: "https://i.postimg.cc/fLwJ1NxD/Email-Writing-Certificate.png"
-  },
-  
-  // Language Proficiency
-  {
-    title: {
-      en: "IELTS mock test solution",
-      bn: "আইইএলটিএস মক টেস্ট সমাধান"
-    },
-    image: "https://i.postimg.cc/L5W5qgG8/IELTS-mock-test-solution.jpg"
-  },
-  {
-    title: {
-      en: "Academic English grammar",
-      bn: "একাডেমিক ইংরেজি ব্যাকরণ"
-    },
-    image: "https://i.postimg.cc/qRLC7RkN/Academic-English-grammar.jpg"
-  },
-  {
-    title: {
-      en: "English for Everyday Certificate",
-      bn: "দৈনন্দিন ইংরেজি সার্টিফিকেট"
-    },
-    image: "https://i.postimg.cc/nrrMcGRW/English-for-Everyday-Certificate.png"
-  }
 ];
